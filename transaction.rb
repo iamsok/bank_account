@@ -1,22 +1,26 @@
 class Transaction
-  attr_accessor :amount, :credit_debit, :date, :source
+  attr_reader :amount, :date, :description
 
-  def initialize(amount, credit_debit, date, source)
+  def initialize(amount, date, description)
     @amount = amount.to_f
-    @credit_debit = credit_debit
     @date = date
-    @source = source
+    @description = description
   end
 
   def deposit?
-    credit_debit.downcase == 'deposit'
+    amount > 0
+  end
+
+  def type
+    if deposit?
+      "DEPOSIT"
+    else
+      "WITHDRAWAL"
+    end
   end
 
   def summary
-    "$#{amount}   #{credit_debit}   #{date}  -  #{source}"
+    "$#{amount.abs}   #{type}   #{date}  -  #{description}"
   end
 
 end
-
-trans = Transaction.new(100, "deposit", "1/1/2011", "Launch Academy")
-puts trans.summary
